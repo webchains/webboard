@@ -42,13 +42,13 @@ export default {
         }
     },
     sendPost(data){
-        axios.post(this.servers + '/replies/' + this.post._id, data).then(res => {
+        axios.post(this.servers + '/data/replies/' + this.post._id, data).then(res => {
             this.text = '';
             this.media = '';
             this.category = '';
             this.feedback = 'post was submitted';
             setTimeout(() => {this.feedback = null;}, 3000);
-            this.$emit('reply', this.post._id);
+            this.$emit('reply', res.data);
         }).catch(error => {
             console.log(error);
             this.feedback = 'error while submitting post, try again later';

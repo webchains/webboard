@@ -1,6 +1,6 @@
 <template>
   <b-container>
-      <Post :post="post" v-if="post" @sendReply="getPost"/>
+      <Post :post="post" v-if="post" @sendReply="matchPost" @sendInterest="matchPost"/>
   </b-container>
 </template>
 
@@ -8,10 +8,10 @@
 import Post from '../components/Post.vue'
 import axios from 'axios'
 export default {
-    name: 'Post',
+    name: 'post',
     data(){
         return {
-            id: this.$route.params.postid,
+            id: this.$route.params.post,
             post: null
         }
     },
@@ -19,16 +19,18 @@ export default {
         Post
     },
     created(){
-        this.getPost(this.id);
+        this.getPost();
     },
     methods: {
-        getPost(id){
-            axios.get(this.$store.getters.randomServer + '/data/post/' + id).then(res => {
+        getPost(){
+            axios.get(this.$store.getters.randomServer + '/data/post/' + this.id).then(res => {
                 this.post = res.data;
-                this.post.replies = res.data.replies;
             }).catch(error => {
                 console.log(error);
             });
+        },
+        matchPost(data){
+            this.post = data;
         }
     }
 }

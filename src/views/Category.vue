@@ -48,7 +48,7 @@
     <b-row class="my-3" align-h="center" v-if="posts">
       <b-col v-if="posts.docs.length">
         <p>Posts</p>
-        <Post v-for="post of posts.docs" :key="post._id" class="rowcol" @sendReply="getPost" :post="post"/>
+        <Post v-for="post of posts.docs" :key="post._id" class="rowcol" @sendReply="matchPost" @sendInterest="matchPost" :post="post"/>
         <b-pagination v-model="page" :total-rows="posts.total" :per-page="limit" align="fill"></b-pagination>
       </b-col>
       <b-col v-else><p>no posts yet on the chain</p></b-col>
@@ -135,8 +135,9 @@ export default {
     matchPost(data){
       for(let i = 0;i < this.posts.length;i++){
         if(data._id === this.posts[i]._id){
-          this.posts[i] = data;
+          // this.posts[i] = data;
           this.posts[i].replies = data.replies;
+          this.posts[i].interests = data.interests;
           return true;
         }
       }
@@ -145,13 +146,6 @@ export default {
       axios.get(this.$store.getters.randomServer + '/categories/' + this.category + '/' + this.page + '/' + this.limit).then(res => {
         this.posts = res.data;
       }).catch(error => {console.log(error);});
-    },
-    getPost(e){
-      axios.post(this.$store.getters.randomServer + '/data/post/' + e).then(res => {
-        this.matchPost(res.data);
-      }).catch(error => {
-        console.log(error);
-      });
     },
     getCount(){
       axios.post(this.$store.getters.randomServer + '/categories/' + this.category + '/count').then(res => {

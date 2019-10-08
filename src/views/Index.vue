@@ -9,7 +9,6 @@
     <b-row>
       <b-col v-if="$store.getters.isAuth">
         <p class="logged">address:{{$store.getters.user.publicUser}}</p>
-        <p class="logged">balance: {{$store.getters.balance}}</p>
       </b-col>
     </b-row>
     <b-row class="my-2" v-if="$store.getters.isAuth">
@@ -51,7 +50,7 @@
     <b-row class="my-3" align-h="center" v-if="posts">
       <b-col v-if="posts.docs.length">
         <p>Posts</p>
-        <Post v-for="post of posts.docs" :key="post._id" class="rowcol" @sendReply="getPost" :post="post"/>
+        <Post v-for="post of posts.docs" :key="post._id" class="rowcol" @sendReply="matchPost" :post="post" @sendInterest="matchPost"/>
         <b-pagination v-model="page" :total-rows="posts.total" :per-page="limit" align="fill"></b-pagination>
       </b-col>
       <b-col v-else><p>no posts yet</p></b-col>
@@ -99,7 +98,7 @@ export default {
   },
   methods: {
     onSubmit(){
-        if(!this.category || !this.text && !this.media){
+        if(!this.category || !/\w/.test(this.category) || this.category.length > 25 || !this.text && !this.media){
             this.feedback = 'something is empty or incorrect';
             setTimeout(() => {this.feedback = null;}, 3000);
         } else {
@@ -135,18 +134,12 @@ export default {
         this.posts = res.data;
       }).catch(error => {console.log(error);});
     },
-    getPost(e){
-        axios.get(this.$store.getters.randomServer + '/data/post/' + e).then(res => {
-            this.matchPost(res.data);
-        }).catch(error => {
-            console.log(error);
-        });
-    },
     matchPost(data){
       for(let i = 0;i < this.posts.length;i++){
         if(data._id === this.posts[i]._id){
-          this.posts[i] = data;
+          // this.posts[i] = data;
           this.posts[i].replies = data.replies;
+          this.posts[i].interests = data.interests;
           return true;
         }
       }

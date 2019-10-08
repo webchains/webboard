@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Nav/>
-    <router-view :mineMessage="mineMessage" @mine="startMine" :mining="mining"/>
+    <router-view @mine="startMine" :mining="mining"/>
     <Stamp/>
   </div>
 </template>

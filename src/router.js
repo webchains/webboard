@@ -6,6 +6,7 @@ import register from './views/Register.vue'
 import login from './views/Login.vue'
 import errors from './views/Errors.vue'
 import profile from './views/Profile.vue'
+import post from './views/Post.vue'
 import category from './views/Category.vue'
 import categories from './views/Categories.vue'
 
@@ -19,6 +20,11 @@ export default new Router({
       path: '/',
       name: 'index',
       component: index
+    },
+    {
+      path: '/post/:post',
+      name: 'post',
+      component: post
     },
     {
       path: '/categories',

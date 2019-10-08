@@ -86,7 +86,7 @@ export default new Vuex.Store({
     clearUser(context){
       context.commit('clearAuth');
       localStorage.clear();
-      router.replace('/');
+      // router.replace('/');
     },
     // expireLogout(context, expiration){
     //   setTimeout(() => {
@@ -111,7 +111,6 @@ export default new Vuex.Store({
         context.commit('mutationLogin', {
           publicUser, privateUser
         });
-        context.dispatch('actionBalance');
       }
     },
     actionLogin(context, payload){
@@ -119,7 +118,6 @@ export default new Vuex.Store({
       let privateUser = payload.privateUser;
       // let expiresIn = payload.expirationTime;
       context.commit('mutationLogin', { publicUser, privateUser });
-      context.dispatch('actionBalance');
       // context.dispatch('expireLogout', expiresIn);
     },
     actionStartMine(context){

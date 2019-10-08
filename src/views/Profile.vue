@@ -9,7 +9,7 @@
         <b-row v-if="post">
             <b-col v-if="posts.length">
                 <p>Posts</p>
-                <Post v-for="post of posts" :key="post._id" class="rowcol" @sendReply="getPost" :post="post"/>
+                <Post v-for="post of posts" :key="post._id" class="rowcol" @sendReply="matchPost" :post="post" @sendInterest="matchPost"/>
                 <b-pagination v-model="page" :total-rows="posts.length" :per-page="limit" align="fill"></b-pagination>
             </b-col>
             <b-col v-else>
@@ -50,16 +50,12 @@ export default {
             this.posts = posts;
         }).catch(error => {console.log(error);});
         },
-        getPost(e){
-        axios.get(this.$store.getters.randomServer + '/data/post/' + e).then(res => {
-            this.matchPost(res.data);
-        }).catch(error => {console.log(error);});
-        },
         matchPost(data){
             for(let i = 0;i < this.posts.length;i++){
                 if(data._id === this.posts[i]._id){
-                this.posts[i] = data;
+                // this.posts[i] = data;
                 this.posts[i].replies = data.replies;
+                this.posts[i].interests = data.interests;
                 return true;
                 }
             }

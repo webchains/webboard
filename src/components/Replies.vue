@@ -1,9 +1,33 @@
 <template>
     <b-row>
         <b-col>
-            <p class="mainAddress">from: <span @click="short = !short" v-if="short">{{address.substring(0, 15)}}...click to see</span><span @click="short = !short" v-else>{{address}}</span></p>
-            <p>{{reply}}</p>
-            <b-button :active="!mining" @click="mainMine(address)" v-if="$store.getters.isAuth && $store.getters.user.publicUser !== address" >Mine</b-button>
+            <b-row>
+              <b-col>
+                <p class="mainAddress">from: {{reply.user}}</p>
+              </b-col>
+            </b-row>
+            <!-- <p>media: <a :href="nodes + '/files/' + reply.media">{{reply.media}}</a></p> -->
+            <b-row v-if="reply.text">
+                <b-col v-if="$route.name !== 'post'">
+                    <read-more more-str="read more" :text="reply.text" link="#" less-str="read less" :max-chars="280"></read-more>
+                </b-col>
+                <b-col v-else>
+                    <p>{{reply.text}}</p>
+                </b-col>
+            </b-row>
+            <b-row v-if="reply.media">
+                <b-col>
+                    <img :src="$store.getters.randomServer + '/files/' + reply.media" :alt="reply.media" v-if="/\.(jpe?g|png|gif|bmp|webp)$/i.test(reply.media)" class="mediaSize">
+                    <video v-else-if="/\.(ogg|webm|3gp|flv|mp4)$/i.test(reply.media)" :src="$store.getters.randomServer + '/files/' + reply.media" controls class="mediaSize"></video>
+                    <audio v-else-if="/\.(mp3|aac|wma|wav|flac)$/i.test(reply.media)" :src="$store.getters.randomServer + '/files/' + reply.media" controls class="mediaSize"></audio>
+                    <p v-else class="actual">media: <a :href="$store.getters.randomServer + '/files/' + reply.media">{{reply.media}}</a></p>
+                </b-col>
+            </b-row>
+            <b-row>
+              <b-col>
+                <p><b-button :active="!mining" @click="mainMine(reply.user)" v-if="$store.getters.isAuth && $store.getters.user.publicUser !== reply.user">Mine</b-button></p>
+              </b-col>
+            </b-row>
         </b-col>
     </b-row>
 </template>
@@ -11,12 +35,7 @@
 <script>
 export default {
     name: 'replies',
-    props: ['address', 'reply', 'mining'],
-    data(){
-        return {
-            short: true
-        }
-    },
+    props: ['reply', 'mining'],
     methods: {
         mainMine(e){
             // if(e !== this.$store.getters.user.publicUser){
