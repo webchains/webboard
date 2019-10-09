@@ -2,16 +2,15 @@
   <b-container>
     <b-row v-if="summary">
       <b-col>
-        <h1>{{summary.name}}</h1>
-        <h3>{{summary.about}}</h3>
+        <p>name: {{summary.name}} | about: {{summary.about}} | count: {{summary.count}} | checksum: {{summary.checksum}} | type: {{summary.type}}</p>
       </b-col>
     </b-row>
-    <b-row>
-      <b-col v-if="$store.getters.isAuth">
+    <b-row v-if="$store.getters.isAuth">
+      <b-col>
         <p class="logged">address:{{$store.getters.user.publicUser}}</p>
       </b-col>
     </b-row>
-    <b-row class="my-2" v-if="$store.getters.isAuth">
+    <!-- <b-row class="my-2" v-if="$store.getters.isAuth">
       <b-col>
         <b-button @click="tog = !tog" type="button">Private Key</b-button>
       </b-col>
@@ -29,18 +28,10 @@
           </b-col>
         </b-row>
       </b-col>
-    </b-row>
+    </b-row> -->
     <b-row align-h="center" class="my-3" v-if="$store.getters.isAuth">
       <b-col>
-          <b-form @submit.prevent="onSubmit">
-            <b-form-file v-model="media" class="my-1"></b-form-file>
-            <b-form-textarea v-model="text" placeholder="type your post" class="my-1"></b-form-textarea>
-            <b-input-group prepend="Category" class="mt-3" size="sm">
-                <b-form-input v-model="category" placeholder="type category here"></b-form-input>
-            </b-input-group>
-            <b-button type="submit" class="my-1">submit</b-button>
-          </b-form>
-          <p v-if="feedback">{{feedback}}</p>
+        <SendPost @sendPost="madePost"/>
       </b-col>
     </b-row>
     <b-row v-else><b-col><p>Register or Login to submit content</p></b-col></b-row>
@@ -64,6 +55,7 @@
 </template>
 
 <script>
+import SendPost from '../components/SendPost.vue'
 import Post from '../components/Post.vue'
 // @ is an alias to /src
 import axios from 'axios'
@@ -71,11 +63,7 @@ export default {
   name: 'panel',
   data(){
     return {
-      feedback: 'interact',
-      text: '',
-      media: '',
-      category: '',
-      tog: false,
+      // tog: false,
       limit: 25,
       summary: null,
       posts: null,
@@ -83,6 +71,7 @@ export default {
     }
   },
   created(){
+    this.getSummary();
     this.getPosts();
   },
   watch: {
@@ -94,39 +83,19 @@ export default {
     }
   },
   components: {
-    Post
+    Post,
+    SendPost
   },
   methods: {
-    onSubmit(){
-        if(!this.category || !/\w/.test(this.category) || this.category.length > 25 || !this.text && !this.media){
-            this.feedback = 'something is empty or incorrect';
-            setTimeout(() => {this.feedback = null;}, 3000);
-        } else {
-            let bodyFormData = new FormData();
-            bodyFormData.append('main', this.main);
-            bodyFormData.append('category', this.category);
-            if(this.text){
-                bodyFormData.append('text', this.text);
-            }
-            if(this.media){
-                bodyFormData.append('media', this.media);
-            }
-            this.sendPost(bodyFormData);
-        }
+    madePost(){
+      this.getPosts();
     },
-    sendPost(data){
-        axios.post(this.$store.getters.randomServer + '/posts', data).then(res => {
-            this.text = '';
-            this.media = '';
-            this.category = '';
-            this.feedback = 'post was submitted';
-            setTimeout(() => {this.feedback = null;}, 3000);
-            this.getPosts();
-        }).catch(error => {
-            console.log(error);
-            this.feedback = 'error while submitting post, try again later';
-            setTimeout(() => {this.feedback = null;}, 3000);
-        });
+    getSummary(){
+      axios.get(this.$store.getters.randomServer + '/data').then(res => {
+        this.summary = res.data;
+      }).catch(error => {
+        console.log(error);
+      });
     },
     getPosts(){
       axios.get(this.$store.getters.randomServer + '/data/posts/' + this.page + '/' + this.limit).then(res => {
@@ -135,11 +104,11 @@ export default {
       }).catch(error => {console.log(error);});
     },
     matchPost(data){
-      for(let i = 0;i < this.posts.length;i++){
-        if(data._id === this.posts[i]._id){
+      for(let i = 0;i < this.posts.docs.length;i++){
+        if(data._id === this.posts.docs[i]._id){
           // this.posts[i] = data;
-          this.posts[i].replies = data.replies;
-          this.posts[i].interests = data.interests;
+          this.posts.docs[i].replies = data.replies;
+          this.posts.docs[i].interests = data.interests;
           return true;
         }
       }

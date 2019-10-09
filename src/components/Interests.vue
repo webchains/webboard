@@ -3,7 +3,7 @@
       <b-col>
           <b-row v-for="(data, index) of post.interests" :key="index">
               <b-col>
-                  <p>user: {{data}}</p>
+                  <p class="mainAddress">user: {{data}}</p>
               </b-col>
           </b-row>
       </b-col>

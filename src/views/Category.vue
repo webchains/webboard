@@ -1,12 +1,11 @@
 <template>
   <b-container>
-    <b-row>
-      <b-col v-if="$store.getters.isAuth">
+    <b-row v-if="$store.getters.isAuth">
+      <b-col>
         <p class="logged">address:{{$store.getters.user.publicUser}}</p>
-        <p class="logged">balance: {{$store.getters.balance}}</p>
       </b-col>
     </b-row>
-    <b-row class="my-2" v-if="$store.getters.isAuth">
+    <!-- <b-row class="my-2" v-if="$store.getters.isAuth">
       <b-col>
         <b-button @click="tog = !tog" type="button">Private Key</b-button>
       </b-col>
@@ -24,21 +23,15 @@
           </b-col>
         </b-row>
       </b-col>
-    </b-row>
-    <b-row>
+    </b-row> -->
+    <b-row v-if="data">
       <b-col>
-        <h1>{{category}}</h1>
-        <h3 v-if="count">contents on chain: {{count}}</h3>
+        <p>count: {{data.count}} | hits: {{data.hit}}</p>
       </b-col>
     </b-row>
     <b-row align-h="center" class="my-3" v-if="$store.getters.isAuth">
       <b-col>
-          <b-form @submit.prevent="onSubmit">
-            <b-form-file v-model="media" class="my-1"></b-form-file>
-            <b-form-textarea v-model="text" placeholder="type your post" class="my-1"></b-form-textarea>
-            <b-button type="submit" class="my-1">submit</b-button>
-          </b-form>
-          <p v-if="feedback">{{feedback}}</p>
+        <SendCategoryPost :category="category" @sendCategoryPost="madePost"/>
       </b-col>
     </b-row>
     <b-row v-else><b-col><p>Register or Login to submit content</p></b-col></b-row>
@@ -62,6 +55,7 @@
 </template>
 
 <script>
+import SendCategoryPost from '../components/SendCategoryPost.vue'
 import Post from '../components/Post.vue'
 // @ is an alias to /src
 import axios from 'axios'
@@ -69,21 +63,19 @@ export default {
   name: 'category',
   data(){
     return {
-      feedback: 'interact',
       category: this.$route.params.category,
       posts: null,
       page: 1,
-      tog: false,
+      // tog: false,
       limit: 25,
-      text: '',
-      media: '',
-      count: null
+      data: null
     }
   },
   created(){
     if(this.category.length > 25){
         this.$router.replace('/');
     }
+    this.getData();
     this.getPosts();
   },
   watch: {
@@ -99,45 +91,19 @@ export default {
     }
   },
   components: {
-    Post
+    Post,
+    SendCategoryPost
   },
   methods: {
-    onSubmit(){
-        if(!this.text && !this.media){
-            this.feedback = 'something is empty or incorrect';
-            setTimeout(() => {this.feedback = null;}, 3000);
-        } else {
-            let bodyFormData = new FormData();
-            bodyFormData.append('main', this.main);
-            bodyFormData.append('category', this.category);
-            if(this.text){
-                bodyFormData.append('text', this.text);
-            }
-            if(this.media){
-                bodyFormData.append('media', this.media);
-            }
-            this.sendPost(bodyFormData);
-        }
-    },
-    sendPost(data){
-        axios.post(this.$store.getters.randomServer + '/posts', data).then(res => {
-            this.text = '';
-            this.media = '';
-            this.feedback = 'post was submitted';
-            setTimeout(() => {this.feedback = null;}, 3000);
-            this.getPosts();
-        }).catch(error => {
-            console.log(error);
-            this.feedback = 'error while submitting post, try again later';
-            setTimeout(() => {this.feedback = null;}, 3000);
-        });
+    madePost(){
+        this.getPosts();
     },
     matchPost(data){
-      for(let i = 0;i < this.posts.length;i++){
-        if(data._id === this.posts[i]._id){
+      for(let i = 0;i < this.posts.docs.length;i++){
+        if(data._id === this.posts.docs[i]._id){
           // this.posts[i] = data;
-          this.posts[i].replies = data.replies;
-          this.posts[i].interests = data.interests;
+          this.posts.docs[i].replies = data.replies;
+          this.posts.docs[i].interests = data.interests;
           return true;
         }
       }
@@ -147,9 +113,9 @@ export default {
         this.posts = res.data;
       }).catch(error => {console.log(error);});
     },
-    getCount(){
-      axios.post(this.$store.getters.randomServer + '/categories/' + this.category + '/count').then(res => {
-        this.count = res.data;
+    getData(){
+      axios.get(this.$store.getters.randomServer + '/data/category/' + this.category).then(res => {
+        this.data = res.data;
       }).catch(error => {
         console.log(error);
       });

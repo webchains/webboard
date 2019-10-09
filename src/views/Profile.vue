@@ -6,7 +6,7 @@
                 <p class="logged">balance: {{balance}}</p>
             </b-col>
         </b-row>
-        <b-row v-if="post">
+        <b-row v-if="posts">
             <b-col v-if="posts.length">
                 <p>Posts</p>
                 <Post v-for="post of posts" :key="post._id" class="rowcol" @sendReply="matchPost" :post="post" @sendInterest="matchPost"/>
@@ -47,21 +47,21 @@ export default {
     methods: {
         getPosts(){
         axios.get(this.$store.getters.randomServer + '/data/address/' + this.$store.getters.user.publicUser).then(res => {
-            this.posts = posts;
+            this.posts = res.data;
         }).catch(error => {console.log(error);});
         },
         matchPost(data){
-            for(let i = 0;i < this.posts.length;i++){
-                if(data._id === this.posts[i]._id){
+            for(let i = 0;i < this.posts.docs.length;i++){
+                if(data._id === this.posts.docs[i]._id){
                 // this.posts[i] = data;
-                this.posts[i].replies = data.replies;
-                this.posts[i].interests = data.interests;
+                this.posts.docs[i].replies = data.replies;
+                this.posts.docs[i].interests = data.interests;
                 return true;
                 }
             }
         },
         getBalance(){
-            axios.get(this.$store.getters.randomNode + '/wallet/' + this.$store.getters.user.publicUser).then(res => {console.log(res);this.balance = res.data;}).catch(error => {console.log(error);});
+            axios.get(this.$store.getters.randomNode + '/wallet/' + this.$store.getters.user.publicUser).then(res => {this.balance = res.data;}).catch(error => {console.log(error);});
         }
     }
 }
