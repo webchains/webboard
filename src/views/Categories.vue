@@ -1,7 +1,12 @@
 <template>
     <b-row v-if="data">
         <b-col>
-            <p v-for="category of data.docs" :key="category._id"><router-link :to="{name: 'category', params: {category: category.category}}">{{category.category}}</router-link></p>
+            <b-row v-for="category of data.docs" :key="category._id">
+                <b-col>
+                    <p><router-link :to="{name: 'category', params: {category: category.category}}">{{category.category}}</router-link></p>
+                    <p>counts: {{category.count}} | hits: {{category.hit}}</p>
+                </b-col>
+            </b-row>
             <b-pagination v-model="page" :total-rows="data.length" :per-page="limit" align="fill"></b-pagination>
         </b-col>
     </b-row>

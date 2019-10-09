@@ -1,9 +1,10 @@
 <template>
   <b-row>
       <b-col>
-          <b-row v-for="(data, index) of post.interests" :key="index">
+          <p>Interests</p>
+          <b-row v-for="(data, index) of post.interests" :key="index" class="mainAddress mx-1 my-1 rowcol">
               <b-col>
-                  <p class="mainAddress">user: {{data}}</p>
+                  <p>user: {{data}}</p>
               </b-col>
           </b-row>
       </b-col>

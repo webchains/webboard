@@ -1,6 +1,7 @@
 <template>
     <b-row align-h="center" class="my-3">
       <b-col>
+          <p>Reply</p>
           <b-form @submit.prevent="onSubmit">
             <b-form-file v-model="media" class="my-1"></b-form-file>
             <b-form-textarea v-model="text" placeholder="type your post" class="my-1"></b-form-textarea>

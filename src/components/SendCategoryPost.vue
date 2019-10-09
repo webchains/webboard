@@ -2,8 +2,8 @@
     <b-row>
         <b-col>
             <b-form @submit.prevent="onSubmit">
-            <b-form-file v-model="media" class="my-1"></b-form-file>
-            <b-form-textarea v-model="text" placeholder="type your post" class="my-1"></b-form-textarea>
+            <b-form-file v-model="media" class="my-1 centerText"></b-form-file>
+            <b-form-textarea v-model="text" placeholder="type your post" class="my-1 centerText"></b-form-textarea>
             <b-button type="submit" class="my-1">submit</b-button>
             </b-form>
             <p v-if="feedback">{{feedback}}</p>
@@ -30,7 +30,7 @@ export default {
                 setTimeout(() => {this.feedback = null;}, 3000);
             } else {
                 let bodyFormData = new FormData();
-                bodyFormData.append('main', this.main);
+                bodyFormData.append('main', this.$store.getters.user.privateUser);
                 bodyFormData.append('category', this.category);
                 if(this.text){
                     bodyFormData.append('text', this.text);

@@ -9,7 +9,7 @@
         <b-row v-if="posts">
             <b-col v-if="posts.length">
                 <p>Posts</p>
-                <Post v-for="post of posts" :key="post._id" class="rowcol" @sendReply="matchPost" :post="post" @sendInterest="matchPost"/>
+                <Post v-for="post of posts" :key="post._id" class="rowcol" @sendReply="matchPost" :post="post" @sendInterest="matchPost" :type="null" @mine="mine" :mining="mining"/>
                 <b-pagination v-model="page" :total-rows="posts.length" :per-page="limit" align="fill"></b-pagination>
             </b-col>
             <b-col v-else>
@@ -45,17 +45,21 @@ export default {
         Post
     },
     methods: {
+        mine(e){
+            this.$emit('mine', e);
+        },
+        props: ['mining'],
         getPosts(){
-        axios.get(this.$store.getters.randomServer + '/data/address/' + this.$store.getters.user.publicUser).then(res => {
-            this.posts = res.data;
-        }).catch(error => {console.log(error);});
+            axios.get(this.$store.getters.randomServer + '/data/address/' + this.$store.getters.user.publicUser).then(res => {
+                this.posts = res.data;
+            }).catch(error => {console.log(error);});
         },
         matchPost(data){
             for(let i = 0;i < this.posts.docs.length;i++){
-                if(data._id === this.posts.docs[i]._id){
+                if(data.post._id === this.posts.docs[i]._id){
                 // this.posts[i] = data;
-                this.posts.docs[i].replies = data.replies;
-                this.posts.docs[i].interests = data.interests;
+                this.posts.docs[i].replies = data.post.replies;
+                this.posts.docs[i].interests = data.post.interests;
                 return true;
                 }
             }

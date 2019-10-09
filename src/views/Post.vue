@@ -1,6 +1,6 @@
 <template>
   <b-container>
-      <Post :post="post" v-if="post" @sendReply="matchPost" @sendInterest="matchPost"/>
+      <Post :post="post" v-if="post" @sendReply="matchPost" @sendInterest="matchPost" :type="null" @mine="mine" :mining="mining"/>
   </b-container>
 </template>
 
@@ -21,7 +21,11 @@ export default {
     created(){
         this.getPost();
     },
+    props: ['mining'],
     methods: {
+        mine(e){
+            this.$emit('mine', e);
+        },
         getPost(){
             axios.get(this.$store.getters.randomServer + '/data/post/' + this.id).then(res => {
                 this.post = res.data;
@@ -30,7 +34,7 @@ export default {
             });
         },
         matchPost(data){
-            this.post = data;
+            this.post = data.post;
         }
     }
 }

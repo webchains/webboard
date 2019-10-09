@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container fluid>
     <b-row v-if="summary">
       <b-col>
         <p>name: {{summary.name}} | about: {{summary.about}} | count: {{summary.count}} | checksum: {{summary.checksum}} | type: {{summary.type}}</p>
@@ -31,14 +31,14 @@
     </b-row> -->
     <b-row align-h="center" class="my-3" v-if="$store.getters.isAuth">
       <b-col>
-        <SendPost @sendPost="madePost"/>
+        <SendPost @sendPost="getNewPosts"/>
       </b-col>
     </b-row>
     <b-row v-else><b-col><p>Register or Login to submit content</p></b-col></b-row>
     <hr>
     <b-row><b-col><p>Results: <b-button @click="limit = 10" class="mx-1">10</b-button><b-button @click="limit = 25" class="mx-1">25</b-button><b-button @click="limit = 50" class="mx-1">50</b-button><b-button @click="limit = 75" class="mx-1">75</b-button><b-button @click="limit = 100" class="mx-1">100</b-button></p></b-col></b-row>
     <hr>
-    <b-row class="my-3" align-h="center" v-if="posts">
+    <!-- <b-row class="my-3" align-h="center" v-if="posts">
       <b-col v-if="posts.docs.length">
         <p>Posts</p>
         <Post v-for="post of posts.docs" :key="post._id" class="rowcol" @sendReply="matchPost" :post="post" @sendInterest="matchPost"/>
@@ -49,6 +49,38 @@
     <b-row v-else>
       <b-col>
         <p>no posts yet</p>
+      </b-col>
+    </b-row> -->
+    <b-row class="my-3" align-h="center">
+      <b-col v-if="posts.popular">
+        <b-row>
+          <b-col v-if="posts.popular.docs.length">
+            <p>Popular</p>
+            <Post v-for="post of posts.popular.docs" :key="post._id" class="rowcol mx-5 my-5" @sendReply="matchPost" :post="post" @sendInterest="matchPost" :type="'popular'" @mine="mine" :mining="mining"/>
+            <b-pagination v-model="popularPage" :total-rows="posts.popular.total" :per-page="limit" align="fill"></b-pagination>
+          </b-col>
+          <b-col v-else><p>no popular posts yet</p></b-col>
+        </b-row>
+      </b-col>
+      <b-col v-if="posts.new">
+        <b-row>
+          <b-col v-if="posts.new.docs.length">
+            <p>New</p>
+            <Post v-for="post of posts.new.docs" :key="post._id" class="rowcol mx-5 my-5" @sendReply="matchPost" :post="post" @sendInterest="matchPost" :type="'new'" @mine="mine" :mining="mining"/>
+            <b-pagination v-model="newPage" :total-rows="posts.new.total" :per-page="limit" align="fill"></b-pagination>
+          </b-col>
+          <b-col v-else><p>no new posts yet</p></b-col>
+        </b-row>
+      </b-col>
+      <b-col v-if="posts.updated">
+        <b-row>
+          <b-col v-if="posts.updated.docs.length">
+            <p>Updated</p>
+            <Post v-for="post of posts.updated.docs" :key="post._id" class="rowcol mx-5 my-5" @sendReply="matchPost" :post="post" @sendInterest="matchPost" :type="'updated'" @mine="mine" :mining="mining"/>
+            <b-pagination v-model="updatedPage" :total-rows="posts.updated.total" :per-page="limit" align="fill"></b-pagination>
+          </b-col>
+          <b-col v-else><p>no updated posts yet</p></b-col>
+        </b-row>
       </b-col>
     </b-row>
   </b-container>
@@ -66,10 +98,13 @@ export default {
       // tog: false,
       limit: 25,
       summary: null,
-      posts: null,
-      page: 1
+      posts: {new: null, updated: null, popular: null},
+      newPage: 1,
+      updatedPage: 1,
+      popularPage: 1
     }
   },
+  props: ['mining'],
   created(){
     this.getSummary();
     this.getPosts();
@@ -78,8 +113,14 @@ export default {
     limit(){
       this.getPosts();
     },
-    page(){
-      this.getPosts();
+    newPage(){
+      this.getNewPosts();
+    },
+    updatedPage(){
+      this.getUpdatedPosts();
+    },
+    popularPage(){
+      this.getPopularPosts();
     }
   },
   components: {
@@ -87,8 +128,13 @@ export default {
     SendPost
   },
   methods: {
-    madePost(){
-      this.getPosts();
+    mine(e){
+        this.$emit('mine', e);
+    },
+    getPosts(){
+      this.getNewPosts();
+      this.getUpdatedPosts();
+      this.getPopularPosts();
     },
     getSummary(){
       axios.get(this.$store.getters.randomServer + '/data').then(res => {
@@ -97,19 +143,51 @@ export default {
         console.log(error);
       });
     },
-    getPosts(){
-      axios.get(this.$store.getters.randomServer + '/data/posts/' + this.page + '/' + this.limit).then(res => {
+    getNewPosts(){
+      axios.get(this.$store.getters.randomServer + '/data/posts/' + this.newPage + '/' + this.limit).then(res => {
         console.log(res);
-        this.posts = res.data;
+        this.posts.new = res.data;
+      }).catch(error => {console.log(error);});
+    },
+    getPopularPosts(){
+      axios.get(this.$store.getters.randomServer + '/data/popular/posts/' + this.popularPage + '/' + this.limit).then(res => {
+        console.log(res);
+        this.posts.popular = res.data;
+      }).catch(error => {console.log(error);});
+    },
+    getUpdatedPosts(){
+      axios.get(this.$store.getters.randomServer + '/data/updated/posts/' + this.updatedPage + '/' + this.limit).then(res => {
+        console.log(res);
+        this.posts.updated = res.data;
       }).catch(error => {console.log(error);});
     },
     matchPost(data){
-      for(let i = 0;i < this.posts.docs.length;i++){
-        if(data._id === this.posts.docs[i]._id){
-          // this.posts[i] = data;
-          this.posts.docs[i].replies = data.replies;
-          this.posts.docs[i].interests = data.interests;
-          return true;
+      if(data.type === 'new'){
+        for(let i = 0;i < this.posts.new.docs.length;i++){
+          if(data.post._id === this.posts.new.docs[i]._id){
+            // this.posts[i] = data;
+            this.posts.new.docs[i].replies = data.post.replies;
+            this.posts.new.docs[i].interests = data.post.interests;
+            return true;
+          }
+        }
+      } else if(data.type === 'updated'){
+        for(let i = 0;i < this.posts.updated.docs.length;i++){
+          if(data.post._id === this.posts.updated.docs[i]._id){
+            // this.posts[i] = data;
+            this.posts.updated.docs[i].replies = data.post.replies;
+            this.posts.updated.docs[i].interests = data.post.interests;
+            return true;
+          }
+        }
+      } else if(data.type === 'popular'){
+        for(let i = 0;i < this.posts.popular.docs.length;i++){
+          if(data.post._id === this.posts.popular.docs[i]._id){
+            // this.posts[i] = data;
+            this.posts.popular.docs[i].replies = data.post.replies;
+            this.posts.popular.docs[i].interests = data.post.interests;
+            return true;
+          }
         }
       }
     }

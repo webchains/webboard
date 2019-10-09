@@ -23,9 +23,9 @@
                     <p v-else class="actual">media: <a :href="$store.getters.randomServer + '/files/' + reply.media">{{reply.media}}</a></p>
                 </b-col>
             </b-row>
-            <b-row>
+            <b-row class="my-2">
               <b-col>
-                <p><b-button :active="!mining" @click="mainMine(reply.user)" v-if="$store.getters.isAuth && $store.getters.user.publicUser !== reply.user">Mine</b-button></p>
+                <p><b-button :active="!mining" @click="mainMine(reply.user)" v-if="$store.getters.isAuth && $store.getters.user.publicUser !== reply.user" size="sm">Mine</b-button></p>
               </b-col>
             </b-row>
         </b-col>

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Nav/>
+    <Nav :mining="mining"/>
     <router-view @mine="startMine" :mining="mining"/>
     <Stamp/>
   </div>
@@ -115,12 +115,21 @@ word-wrap: break-word;
 /* Instead use this non-standard one: */
 word-break: break-word;
 }
+/* p {
+  margin-bottom: 0;
+} */
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.postText {
+  margin-bottom: 0;
+}
+.heads {
+  font-size: 12px;
 }
 .bold {
   font-weight: bold;
@@ -149,6 +158,13 @@ word-break: break-word;
   max-width: 100%;
   max-height: 100%;
 }
+.centerText {
+  text-align: center;
+}
+/* .halfSize {
+  width: 50%;
+  margin: 0 auto;
+} */
 /* #nav {
   padding: 30px;
 } */
