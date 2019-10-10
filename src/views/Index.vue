@@ -1,8 +1,9 @@
 <template>
   <b-container fluid>
-    <b-row v-if="summary">
+    <b-row v-if="summary && server">
       <b-col>
         <p>name: {{summary.name}} | about: {{summary.about}} | count: {{summary.count}} | checksum: {{summary.checksum}} | type: {{summary.type}}</p>
+        <p>url: {{server.url}} | http: {{server.httpurl}} | ws: {{server.wsurl}} | hash: {{server.hash}}</p>
       </b-col>
     </b-row>
     <b-row v-if="$store.getters.isAuth">
@@ -97,14 +98,13 @@ export default {
     return {
       // tog: false,
       limit: 25,
-      summary: null,
       posts: {new: null, updated: null, popular: null},
       newPage: 1,
       updatedPage: 1,
       popularPage: 1
     }
   },
-  props: ['mining'],
+  props: ['mining', 'summary', 'server'],
   created(){
     this.getSummary();
     this.getPosts();

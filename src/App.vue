@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Nav :mining="mining"/>
-    <router-view @mine="startMine" :mining="mining"/>
+    <router-view @mine="startMine" :mining="mining" :summary="summary" :server="server"/>
     <Stamp/>
   </div>
 </template>
@@ -20,7 +20,9 @@ export default {
     return {
       mineData: null,
       cores: this.getCores(),
-      mining: null
+      mining: null,
+      summary: null,
+      server: null
     }
   },
   watch: {
@@ -92,12 +94,28 @@ export default {
         // this.hashLoop({proof, difficulty: this.mineData.difficulty});
         this.$store.dispatch('actionEndMine');
       });
+    },
+    getSummary(){
+      axios.get(this.$store.getters.randomServer + '/data').then(res => {
+        this.summary = res.data;
+      }).catch(error => {
+        console.log(error);
+      });
+    },
+    getServer(){
+      axios.get(this.$store.getters.randomServer + '/server').then(res => {
+        this.server = res.data;
+      }).catch(error => {
+        console.log(error);
+      });
     }
   },
   created(){
     this.$store.dispatch('autoLogin');
     this.$store.dispatch('startConnections');
     this.getMineData();
+    this.getSummary();
+    this.getServer();
     this.$store.watch(state => state.mining, data => {this.mining = data;});
   }
 }
