@@ -4,17 +4,17 @@
         <b-row>
             <b-col v-if="categories.popular && categories.popular.docs.length">
                 <Category v-for="category of categories.popular.docs" :key="category._id" :category="category"/>
-                <b-pagination v-model="popularPage" :total-rows="category.popular.total" :per-page="limit" align="fill"></b-pagination>
+                <b-pagination v-model="popularPage" :total-rows="categories.popular.total" :per-page="limit" align="fill"></b-pagination>
             </b-col>
             <b-col v-else><p>no categories yet</p></b-col>
             <b-col v-if="categories.new && categories.new.docs.length">
                 <Category v-for="category of categories.new.docs" :key="category._id" :category="category"/>
-                <b-pagination v-model="newPage" :total-rows="category.new.total" :per-page="limit" align="fill"></b-pagination>
+                <b-pagination v-model="newPage" :total-rows="categories.new.total" :per-page="limit" align="fill"></b-pagination>
             </b-col>
             <b-col v-else><p>no categories yet</p></b-col>
             <b-col v-if="categories.updated && categories.updated.docs.length">
                 <Category v-for="category of categories.updated.docs" :key="category._id" :category="category"/>
-                <b-pagination v-model="updatedPage" :total-rows="category.updated.total" :per-page="limit" align="fill"></b-pagination>
+                <b-pagination v-model="updatedPage" :total-rows="categories.updated.total" :per-page="limit" align="fill"></b-pagination>
             </b-col>
             <b-col v-else><p>no categories yet</p></b-col>
         </b-row>
