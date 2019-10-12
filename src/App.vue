@@ -46,7 +46,7 @@ export default {
       }
     },
     getMineData(){
-      axios.get(this.$store.getters.node + '/miner').then(res => {
+      axios.get(this.$store.getters.randomNode + '/miner').then(res => {
         this.mineData = res.data;
         // let proof = {address: this.address, timestamp: Date.now(), nonce: 0};
         // proof.hash = SHA256(proof.address + proof.timestamp + proof.nonce).toString();
@@ -81,7 +81,7 @@ export default {
       this.sendMine(proof);
     },
     sendMine(data){
-      axios.post(this.$store.getters.node + '/miner', data).then(res => {
+      axios.post(this.$store.getters.randomNode + '/miner', data).then(res => {
         console.log(res.data);
         // let proof = {address: this.address, timestamp: Date.now(), nonce: 0};
         // proof.hash = SHA256(proof.address + proof.timestamp + proof.nonce).toString();

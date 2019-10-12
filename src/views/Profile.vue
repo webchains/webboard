@@ -65,7 +65,7 @@ export default {
             }
         },
         getBalance(){
-            axios.get(this.$store.getters.node + '/wallet/' + this.$store.getters.user.publicUser).then(res => {this.balance = res.data;}).catch(error => {console.log(error);});
+            axios.get(this.$store.getters.randomNode + '/wallet/' + this.$store.getters.user.publicUser).then(res => {this.balance = res.data;}).catch(error => {console.log(error);});
         }
     }
 }
