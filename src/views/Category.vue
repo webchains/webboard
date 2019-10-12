@@ -176,25 +176,25 @@ export default {
       }
     },
     getNewPosts(){
-      axios.get(this.$store.getters.server + '/data/category/new/' + this.category + '/' + this.newPage + '/' + this.limit).then(res => {
+      axios.get(this.$store.getters.randomServer + '/data/category/new/' + this.category + '/' + this.newPage + '/' + this.limit).then(res => {
         console.log(res);
         this.posts.new = res.data;
       }).catch(error => {console.log(error);});
     },
     getPopularPosts(){
-      axios.get(this.$store.getters.server + '/data/category/popular/'+ this.category + '/' + this.popularPage + '/' + this.limit).then(res => {
+      axios.get(this.$store.getters.randomServer + '/data/category/popular/'+ this.category + '/' + this.popularPage + '/' + this.limit).then(res => {
         console.log(res);
         this.posts.popular = res.data;
       }).catch(error => {console.log(error);});
     },
     getUpdatedPosts(){
-      axios.get(this.$store.getters.server + '/data/category/updated/'+ this.category + '/' + this.updatedPage + '/' + this.limit).then(res => {
+      axios.get(this.$store.getters.randomServer + '/data/category/updated/'+ this.category + '/' + this.updatedPage + '/' + this.limit).then(res => {
         console.log(res);
         this.posts.updated = res.data;
       }).catch(error => {console.log(error);});
     },
     getData(){
-      axios.get(this.$store.getters.server + '/data/category/upsert/' + this.category).then(res => {
+      axios.get(this.$store.getters.randomServer + '/data/category/upsert/' + this.category).then(res => {
         this.data = res.data;
       }).catch(error => {
         console.log(error);

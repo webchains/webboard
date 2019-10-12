@@ -96,14 +96,14 @@ export default {
       });
     },
     getSummary(){
-      axios.get(this.$store.getters.server + '/data').then(res => {
+      axios.get(this.$store.getters.randomServer + '/data').then(res => {
         this.summary = res.data;
       }).catch(error => {
         console.log(error);
       });
     },
     getServer(){
-      axios.get(this.$store.getters.server + '/server').then(res => {
+      axios.get(this.$store.getters.randomServer + '/server').then(res => {
         this.server = res.data;
       }).catch(error => {
         console.log(error);

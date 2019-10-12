@@ -136,19 +136,19 @@ export default {
       this.getPopularPosts();
     },
     getNewPosts(){
-      axios.get(this.$store.getters.server + '/data/posts/new/' + this.newPage + '/' + this.limit).then(res => {
+      axios.get(this.$store.getters.randomServer + '/data/posts/new/' + this.newPage + '/' + this.limit).then(res => {
         console.log(res);
         this.posts.new = res.data;
       }).catch(error => {console.log(error);});
     },
     getPopularPosts(){
-      axios.get(this.$store.getters.server + '/data/posts/popular/' + this.popularPage + '/' + this.limit).then(res => {
+      axios.get(this.$store.getters.randomServer + '/data/posts/popular/' + this.popularPage + '/' + this.limit).then(res => {
         console.log(res);
         this.posts.popular = res.data;
       }).catch(error => {console.log(error);});
     },
     getUpdatedPosts(){
-      axios.get(this.$store.getters.server + '/data/posts/updated/' + this.updatedPage + '/' + this.limit).then(res => {
+      axios.get(this.$store.getters.randomServer + '/data/posts/updated/' + this.updatedPage + '/' + this.limit).then(res => {
         console.log(res);
         this.posts.updated = res.data;
       }).catch(error => {console.log(error);});

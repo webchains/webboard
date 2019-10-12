@@ -42,7 +42,7 @@ export default {
         }
     },
     sendPost(data){
-        axios.post(this.$store.getters.server + '/replies/' + this.post._id, data).then(res => {
+        axios.post(this.$store.getters.randomServer + '/replies/' + this.post._id, data).then(res => {
             this.text = '';
             this.media = '';
             this.category = '';

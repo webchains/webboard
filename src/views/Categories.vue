@@ -60,13 +60,13 @@ export default {
             this.getPopularCategories();
         },
         getPopularCategories(){
-            axios.get(this.$store.getters.server + '/data/categories/popular/' + this.popularPage + '/' + this.limit).then(res => {console.log(res);this.data = res.data;}).catch(error => {console.log(error);});
+            axios.get(this.$store.getters.randomServer + '/data/categories/popular/' + this.popularPage + '/' + this.limit).then(res => {console.log(res);this.data = res.data;}).catch(error => {console.log(error);});
         },
         getUpdatedCategories(){
-            axios.get(this.$store.getters.server + '/data/categories/updated/' + this.updatedPage + '/' + this.limit).then(res => {console.log(res);this.data = res.data;}).catch(error => {console.log(error);});
+            axios.get(this.$store.getters.randomServer + '/data/categories/updated/' + this.updatedPage + '/' + this.limit).then(res => {console.log(res);this.data = res.data;}).catch(error => {console.log(error);});
         },
         getNewCategories(){
-            axios.get(this.$store.getters.server + '/data/categories/new/' + this.newPage + '/' + this.limit).then(res => {console.log(res);this.data = res.data;}).catch(error => {console.log(error);});
+            axios.get(this.$store.getters.randomServer + '/data/categories/new/' + this.newPage + '/' + this.limit).then(res => {console.log(res);this.data = res.data;}).catch(error => {console.log(error);});
         }
     },
     created(){
