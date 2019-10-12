@@ -106,7 +106,6 @@ export default {
   },
   props: ['mining', 'summary', 'server'],
   created(){
-    this.getSummary();
     this.getPosts();
   },
   watch: {
@@ -136,27 +135,20 @@ export default {
       this.getUpdatedPosts();
       this.getPopularPosts();
     },
-    getSummary(){
-      axios.get(this.$store.getters.randomServer + '/data').then(res => {
-        this.summary = res.data;
-      }).catch(error => {
-        console.log(error);
-      });
-    },
     getNewPosts(){
-      axios.get(this.$store.getters.randomServer + '/data/posts/' + this.newPage + '/' + this.limit).then(res => {
+      axios.get(this.$store.getters.server + '/data/posts/new/' + this.newPage + '/' + this.limit).then(res => {
         console.log(res);
         this.posts.new = res.data;
       }).catch(error => {console.log(error);});
     },
     getPopularPosts(){
-      axios.get(this.$store.getters.randomServer + '/data/popular/posts/' + this.popularPage + '/' + this.limit).then(res => {
+      axios.get(this.$store.getters.server + '/data/posts/popular/' + this.popularPage + '/' + this.limit).then(res => {
         console.log(res);
         this.posts.popular = res.data;
       }).catch(error => {console.log(error);});
     },
     getUpdatedPosts(){
-      axios.get(this.$store.getters.randomServer + '/data/updated/posts/' + this.updatedPage + '/' + this.limit).then(res => {
+      axios.get(this.$store.getters.server + '/data/posts/updated/' + this.updatedPage + '/' + this.limit).then(res => {
         console.log(res);
         this.posts.updated = res.data;
       }).catch(error => {console.log(error);});

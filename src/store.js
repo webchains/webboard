@@ -10,11 +10,11 @@ export default new Vuex.Store({
     publicUser: null,
     privateUser: null,
     servers: process.env.VUE_APP_SERVERS.includes(',') ? process.env.VUE_APP_SERVERS.split(',') : [process.env.VUE_APP_SERVERS],
-    appServer: null,
+    server: process.env.VUE_APP_SERVER,
+    node: process.env.VUE_APP_NODE,
     stamp: process.env.VUE_APP_STAMP,
     site: process.env.VUE_APP_SITE,
     nodes: process.env.VUE_APP_NODES.includes(',') ? process.env.VUE_APP_NODES.split(',') : [process.env.VUE_APP_NODES],
-    appNode: null,
     mining: false
   },
   getters: {
@@ -27,23 +27,14 @@ export default new Vuex.Store({
     site(state){
       return state.site;
     },
-    servers(state){
-      return state.servers;
-    },
     randomServer(state){
       return state.servers[Math.floor(Math.random() * state.servers.length)];
-    },
-    pickedServer(state){
-      return state.appServer;
-    },
-    pickedNode(state){
-      return state.appNode;
     },
     stamp(state){
       return state.stamp;
     },
-    nodes(state){
-      return state.nodes;
+    node(state){
+      return state.node;
     },
     randomNode(state){
       return state.nodes[Math.floor(Math.random() * state.nodes.length)];

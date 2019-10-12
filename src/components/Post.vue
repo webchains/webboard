@@ -81,7 +81,7 @@ export default {
             // }
         },
         sendInterest(){
-            axios.post(this.$store.getters.randomServer + '/data/interests/' + this.post._id, {main: this.$store.getters.user.publicUser}).then(res => {
+            axios.post(this.$store.getters.server + '/interests/' + this.post._id, {main: this.$store.getters.user.publicUser}).then(res => {
                 this.$emit('sendInterest', {post: res.data, type: this.type});
             }).catch(error => {
                 console.log(error);

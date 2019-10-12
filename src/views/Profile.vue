@@ -50,7 +50,7 @@ export default {
         },
         props: ['mining'],
         getPosts(){
-            axios.get(this.$store.getters.randomServer + '/data/address/' + this.$store.getters.user.publicUser).then(res => {
+            axios.get(this.$store.getters.server + '/data/address/' + this.$store.getters.user.publicUser).then(res => {
                 this.posts = res.data;
             }).catch(error => {console.log(error);});
         },
@@ -65,7 +65,7 @@ export default {
             }
         },
         getBalance(){
-            axios.get(this.$store.getters.randomNode + '/wallet/' + this.$store.getters.user.publicUser).then(res => {this.balance = res.data;}).catch(error => {console.log(error);});
+            axios.get(this.$store.getters.node + '/wallet/' + this.$store.getters.user.publicUser).then(res => {this.balance = res.data;}).catch(error => {console.log(error);});
         }
     }
 }

@@ -27,7 +27,7 @@ export default {
             this.$emit('mine', e);
         },
         getPost(){
-            axios.get(this.$store.getters.randomServer + '/data/post/' + this.id).then(res => {
+            axios.get(this.$store.getters.server + '/data/post/' + this.id).then(res => {
                 this.post = res.data;
             }).catch(error => {
                 console.log(error);

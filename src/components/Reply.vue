@@ -20,8 +20,7 @@ export default {
         return {
             text: '',
             media: '',
-            feedback: null,
-            servers: this.$store.getters.servers
+            feedback: null
         }
     },
     props: ['post'],
@@ -43,7 +42,7 @@ export default {
         }
     },
     sendPost(data){
-        axios.post(this.servers + '/data/replies/' + this.post._id, data).then(res => {
+        axios.post(this.$store.getters.server + '/replies/' + this.post._id, data).then(res => {
             this.text = '';
             this.media = '';
             this.category = '';
