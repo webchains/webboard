@@ -33,6 +33,9 @@ export default new Vuex.Store({
     stamp(state){
       return state.stamp;
     },
+    server(state){
+      return state.server;
+    },
     node(state){
       return state.node;
     },

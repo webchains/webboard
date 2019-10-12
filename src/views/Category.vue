@@ -26,6 +26,7 @@
     </b-row> -->
     <b-row v-if="data">
       <b-col>
+        <p>{{data.category}}</p>
         <p>count: {{data.count}} | hits: {{data.hit}}</p>
       </b-col>
     </b-row>
@@ -193,7 +194,7 @@ export default {
       }).catch(error => {console.log(error);});
     },
     getData(){
-      axios.get(this.$store.getters.server + '/data/category/' + this.category).then(res => {
+      axios.get(this.$store.getters.server + '/data/category/upsert/' + this.category).then(res => {
         this.data = res.data;
       }).catch(error => {
         console.log(error);
