@@ -14,8 +14,7 @@ export default new Vuex.Store({
     node: process.env.VUE_APP_NODE,
     stamp: process.env.VUE_APP_STAMP,
     site: process.env.VUE_APP_SITE,
-    nodes: process.env.VUE_APP_NODES.includes(',') ? process.env.VUE_APP_NODES.split(',') : [process.env.VUE_APP_NODES],
-    mining: false
+    nodes: process.env.VUE_APP_NODES.includes(',') ? process.env.VUE_APP_NODES.split(',') : [process.env.VUE_APP_NODES]
   },
   getters: {
     user(state){
@@ -41,9 +40,6 @@ export default new Vuex.Store({
     },
     randomNode(state){
       return state.nodes[Math.floor(Math.random() * state.nodes.length)];
-    },
-    isMining(state){
-      return state.mining;
     }
   },
   mutations: {
@@ -61,12 +57,6 @@ export default new Vuex.Store({
     },
     mutationMine(state, payload){
       state.mining = payload;
-    },
-    mutationStartMine(state){
-      state.mining = true;
-    },
-    mutationEndMine(state){
-      state.mining = false;
     }
   },
   actions: {
@@ -113,12 +103,6 @@ export default new Vuex.Store({
       // let expiresIn = payload.expirationTime;
       context.commit('mutationLogin', { publicUser, privateUser });
       // context.dispatch('expireLogout', expiresIn);
-    },
-    actionStartMine(context){
-      context.commit('mutationStartMine');
-    },
-    actionEndMine(context){
-      context.commit('mutationEndMine');
     }
   }
 })

@@ -15,6 +15,7 @@
       <b-navbar-nav class="ml-auto">
         <b-nav-text v-if="mining">MINING</b-nav-text>
         <b-nav-text v-else>NOT MINING</b-nav-text>
+        <b-nav-item :disabled="!mining" @click="stop">Stop</b-nav-item>
         <b-nav-item v-if="$store.getters.isAuth" @click="clearData">Logout</b-nav-item>
         <b-nav-item :to="{name: 'register'}" v-if="!$store.getters.isAuth">Register</b-nav-item>
         <b-nav-item :to="{name: 'login'}" v-if="!$store.getters.isAuth">Login</b-nav-item>
@@ -33,6 +34,9 @@ export default {
       }
     },
     methods: {
+      stop(){
+        this.$emit('stop');
+      },
       clearData(){
         this.$store.dispatch('clearUser');
         if(this.$route.name !== 'index'){

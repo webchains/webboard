@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Nav :mining="mining"/>
+    <Nav :mining="mining" @stop="stop"/>
     <router-view @mine="startMine" :mining="mining" :summary="summary" :server="server"/>
     <Stamp/>
   </div>
@@ -20,9 +20,10 @@ export default {
     return {
       mineData: null,
       cores: this.getCores(),
-      mining: null,
+      mining: false,
       summary: null,
-      server: null
+      server: null,
+      cancel: false
     }
   },
   watch: {
@@ -31,6 +32,9 @@ export default {
     }
   },
   methods: {
+    stop(){
+      this.cancel = true;
+    },
     getCores(){
       let cores = navigator.hardwareConcurrency;
       if(cores > 8){
@@ -56,7 +60,7 @@ export default {
       });
     },
     startMine(data){
-      if(!this.$store.getters.isMining){
+      if(!this.mining){
         this.$store.dispatch('actionStartMine');
         let proof = {address: data, timestamp: Date.now(), nonce: 0};
         proof.hash = SHA256(proof.address + proof.timestamp + proof.nonce).toString();
@@ -72,6 +76,10 @@ export default {
       let i = 0;
       while(!proof.hash.startsWith('0'.repeat(difficulty))){
         if(i % 5 === 0){
+          if(this.cancel){
+              this.stopMining();
+              return false;
+            }
           await this.sleep(this.cores);
         }
         proof.nonce++;
@@ -86,14 +94,18 @@ export default {
         // let proof = {address: this.address, timestamp: Date.now(), nonce: 0};
         // proof.hash = SHA256(proof.address + proof.timestamp + proof.nonce).toString();
         // this.hashLoop({proof, difficulty: this.mineData.difficulty});
-        this.$store.dispatch('actionEndMine');
+        this.stopMining();
       }).catch(error => {
         console.log(error.response.data);
         // let proof = {address: this.address, timestamp: Date.now(), nonce: 0};
         // proof.hash = SHA256(proof.address + proof.timestamp + proof.nonce).toString();
         // this.hashLoop({proof, difficulty: this.mineData.difficulty});
-        this.$store.dispatch('actionEndMine');
+        this.stopMining();
       });
+    },
+    stopMining(){
+      this.mining = false;
+      this.cancel = false;
     },
     getSummary(){
       axios.get(this.$store.getters.randomServer + '/data').then(res => {
@@ -116,7 +128,7 @@ export default {
     this.getMineData();
     this.getSummary();
     this.getServer();
-    this.$store.watch(state => state.mining, data => {this.mining = data;});
+    // this.$store.watch(state => state.mining, data => {this.mining = data;});
   }
 }
 </script>
